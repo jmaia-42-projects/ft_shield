@@ -82,7 +82,7 @@ void read_client(t_client *client)
 		return;
 	}
 	buffer[read_size] = '\0';
-	
+
 	//TODO: Implements splitting messages by '\n'
 	strchr(buffer, '\n')[0] = '\0';
 
