@@ -26,5 +26,8 @@ typedef struct s_client
 
 int	prepare_socket();
 void poll_routine(int sockfd);
+void treat_command(t_client *client, char *command);
+void send_to_client(t_client *client, char *message);
+void disconnect(t_client *client);
 
 #endif

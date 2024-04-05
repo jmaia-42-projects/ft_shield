@@ -6,6 +6,7 @@ SRCS		= 	\
 				$(addprefix polling/, \
 					prepare_socket.c \
 					poll_routine.c \
+					cli.c \
 				)
 
 _OBJS		=	${SRCS:.c=.o}

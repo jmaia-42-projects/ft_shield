@@ -2,6 +2,11 @@
 
 t_client clients[MAX_CLIENTS];
 
+void send_to_client(t_client *client, char *message)
+{
+	send(client->socket, message, strlen(message), 0);
+}
+
 int count_connected_clients()
 {
 	int count = 0;
@@ -47,7 +52,7 @@ void accept_client(int serverSocket)
 		return;
 	}
 
-	t_client new_client = {true, client_socket, true};
+	t_client new_client = {true, client_socket, false};
 	for (size_t i = 0; i < MAX_CLIENTS; i++)
 	{
 		if (!clients[i].connected)
@@ -56,6 +61,14 @@ void accept_client(int serverSocket)
 			break;
 		}
 	}
+
+	send_to_client(&new_client, "Password: ");
+}
+
+void disconnect(t_client *client)
+{
+	close(client->socket);
+	client->connected = false;
 }
 
 void read_client(t_client *client)
@@ -65,12 +78,15 @@ void read_client(t_client *client)
 	ssize_t read_size = recv(client->socket, buffer, RECV_BUFFER_SIZE, 0);
 	if (read_size <= 0)
 	{
-		close(client->socket);
-		client->connected = false;
+		disconnect(client);
 		return;
 	}
 	buffer[read_size] = '\0';
-	printf("Received: %s\n", buffer);
+	
+	//TODO: Implements splitting messages by '\n'
+	strchr(buffer, '\n')[0] = '\0';
+
+	treat_command(client, buffer);
 }
 
 void treat_poll(struct pollfd *pollSet, int serverSocket)
