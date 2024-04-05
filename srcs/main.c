@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmaia <jmaia@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 19:13:32 by jmaia             #+#    #+#             */
-/*   Updated: 2024/03/06 19:55:15 by jmaia            ###   ###               */
+/*   Updated: 2024/04/05 19:56:27 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ bool daemonize();
 
 int main()
 {
-	daemonize();
-	while (true)
-		;
+	//
+	// daemonize();
 }
