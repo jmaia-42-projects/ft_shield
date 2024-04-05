@@ -2,7 +2,11 @@ NAME		=	ft_shield
 
 SRCS		= 	\
 				main.c \
-				daemonize.c
+				daemonize.c \
+				$(addprefix polling/, \
+					prepare_socket.c \
+					poll_routine.c \
+				)
 
 _OBJS		=	${SRCS:.c=.o}
 OBJS		=	$(addprefix build/, $(_OBJS))
