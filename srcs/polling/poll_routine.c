@@ -111,9 +111,8 @@ void treat_poll(struct pollfd *pollSet, int serverSocket)
 void poll_routine(int sockfd)
 {
 	t_client default_client = {false, -1, false};
-	clients[0] = default_client;
-	clients[1] = default_client;
-	clients[2] = default_client;
+	for (size_t i = 0; i < MAX_CLIENTS; i++)
+		clients[i] = default_client;
 
 	while (1)
 	{
