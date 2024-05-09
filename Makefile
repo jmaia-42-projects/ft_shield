@@ -1,8 +1,10 @@
 NAME		=	ft_shield
 
 SRCS		= 	\
+				cleanup.c \
 				main.c \
 				daemonize.c \
+				lock.c \
 				$(addprefix polling/, \
 					prepare_socket.c \
 					poll_routine.c \
