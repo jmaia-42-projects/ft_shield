@@ -12,10 +12,14 @@
 # include <stdio.h>
 # include <stdbool.h>
 
+# include "sha256.h"
+
 # define PORT 4242
 # define LISTEN_LIMIT 10
 # define MAX_CLIENTS 3
 # define RECV_BUFFER_SIZE 1024
+
+# define SHA256_PASS "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"
 
 typedef struct s_client
 {

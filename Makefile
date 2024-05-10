@@ -5,6 +5,7 @@ SRCS		= 	\
 				main.c \
 				daemonize.c \
 				lock.c \
+				sha256.c \
 				$(addprefix polling/, \
 					prepare_socket.c \
 					poll_routine.c \

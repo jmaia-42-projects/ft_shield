@@ -3,7 +3,19 @@
 //TODO: Implements hash function
 bool is_password(char *password)
 {
-	return (strcmp(password, "password") == 0);
+	uint8_t hash[32];
+	sha256_string(password, hash);
+
+	char *hash_str;
+	if (!convert_hash_to_string(hash, 32, &hash_str)) {
+		//TODO: Handle error
+		return false;
+	}
+
+	bool res = (strcmp(hash_str, SHA256_PASS) == 0);
+	free(hash_str);
+
+	return res;
 }
 
 void shell_command(t_client *client)
