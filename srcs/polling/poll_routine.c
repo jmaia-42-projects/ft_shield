@@ -144,7 +144,7 @@ void treat_poll(struct pollfd *pollSet, int serverSocket)
 	{
 		for (size_t i = 0; i < MAX_CLIENTS; i++)
 		{
-			if (clients[i].socket == pollSet->fd)
+			if (clients[i].connected && clients[i].socket == pollSet->fd)
 			{
 				read_client(&clients[i]);
 				return;
