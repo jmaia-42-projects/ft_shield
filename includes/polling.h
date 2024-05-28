@@ -26,6 +26,7 @@ typedef struct s_client
 	bool connected;
 	int	socket;
 	bool authentified;
+	char *buffer;
 }	t_client;
 
 int	prepare_socket();

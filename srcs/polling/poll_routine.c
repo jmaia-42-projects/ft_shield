@@ -52,7 +52,7 @@ void accept_client(int serverSocket)
 		return;
 	}
 
-	t_client new_client = {true, client_socket, false};
+	t_client new_client = {true, client_socket, false, NULL};
 	for (size_t i = 0; i < MAX_CLIENTS; i++)
 	{
 		if (!clients[i].connected)
@@ -71,9 +71,38 @@ void disconnect(t_client *client)
 	client->connected = false;
 }
 
+int get_len_to_separator(char *buffer, char separator)
+{
+	size_t i = -1;
+	while (buffer[++i]) {
+		if (buffer[i] == separator)
+			return i;
+	}
+	return -1;
+}
+
+char *extract_command(char **buffer)
+{
+	int separator_pos = get_len_to_separator(*buffer, '\n');
+	if (separator_pos == -1)
+		return NULL;
+	char *command = malloc(separator_pos + 1);
+	if (!command)
+		return NULL;
+	strncpy(command, *buffer, separator_pos);
+	command[separator_pos] = '\0';
+	
+	char *new_buffer = malloc(strlen(*buffer) - separator_pos + 1);
+	if (!new_buffer)
+		return NULL;
+	strcpy(new_buffer, *buffer + separator_pos + 1);
+	free(*buffer);
+	*buffer = new_buffer;
+	return command;
+}
+
 void read_client(t_client *client)
 {
-	//TODO: Implements buffering to get messages in multiple recv calls
 	char buffer[RECV_BUFFER_SIZE + 1];
 	ssize_t read_size = recv(client->socket, buffer, RECV_BUFFER_SIZE, 0);
 	if (read_size <= 0)
@@ -83,10 +112,26 @@ void read_client(t_client *client)
 	}
 	buffer[read_size] = '\0';
 
-	//TODO: Implements splitting messages by '\n'
-	strchr(buffer, '\n')[0] = '\0';
+	size_t buffer_len = strlen(buffer) + (client->buffer ? strlen(client->buffer) : 0);
+	char *new_buffer = malloc(buffer_len + 1);
+	if (!new_buffer)
+		return;
+	if (client->buffer)
+	{
+		strcpy(new_buffer, client->buffer);
+		strcat(new_buffer, buffer);
+		free(client->buffer);
+	}
+	else
+		strcpy(new_buffer, buffer);
+	client->buffer = new_buffer;
 
-	treat_command(client, buffer);
+	char *command;
+	while ((command = extract_command(&client->buffer)) != NULL)
+	{
+		treat_command(client, command);
+		free(command);
+	}
 }
 
 void treat_poll(struct pollfd *pollSet, int serverSocket)
@@ -110,7 +155,7 @@ void treat_poll(struct pollfd *pollSet, int serverSocket)
 
 void poll_routine(int sockfd)
 {
-	t_client default_client = {false, -1, false};
+	t_client default_client = {false, -1, false, NULL};
 	for (size_t i = 0; i < MAX_CLIENTS; i++)
 		clients[i] = default_client;
 

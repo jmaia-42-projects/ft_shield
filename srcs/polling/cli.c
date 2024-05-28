@@ -1,16 +1,13 @@
 #include "polling.h"
 
-//TODO: Implements hash function
 bool is_password(char *password)
 {
 	uint8_t hash[32];
 	sha256_string(password, hash);
 
 	char *hash_str;
-	if (!convert_hash_to_string(hash, 32, &hash_str)) {
-		//TODO: Handle error
+	if (!convert_hash_to_string(hash, 32, &hash_str))
 		return false;
-	}
 
 	bool res = (strcmp(hash_str, SHA256_PASS) == 0);
 	free(hash_str);
