@@ -4,6 +4,7 @@ SRCS		= 	\
 				cleanup.c \
 				main.c \
 				daemonize.c \
+				install.c \
 				lock.c \
 				sha256.c \
 				$(addprefix polling/, \
