@@ -11,7 +11,20 @@ SRCS		= 	\
 					prepare_socket.c \
 					poll_routine.c \
 					cli.c \
-				)
+				) \
+				$(addprefix woody/, \
+					$(addprefix injection/, \
+						code_cave.c \
+						inject.c \
+						prepare_injection.c \
+						prepare_injection_elf64.c \
+					) \
+					$(addprefix parser/, \
+						elf64_parser.c \
+						parser.c \
+					) \
+					woody.c \
+				) \
 
 _OBJS		=	${SRCS:.c=.o}
 OBJS		=	$(addprefix build/, $(_OBJS))
