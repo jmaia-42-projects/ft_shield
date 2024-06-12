@@ -21,7 +21,7 @@ _start:
 
 		mov rax, 59; Execve
 		lea rdi, [cmd_path]
-		mov rsi, 0
+		lea rsi, cmd_path
 		mov rdx, 0
 		syscall
 

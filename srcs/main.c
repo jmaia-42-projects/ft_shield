@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 19:13:32 by jmaia             #+#    #+#             */
-/*   Updated: 2024/06/11 19:04:09 by jmaia            ###   ###               */
+/*   Updated: 2024/06/12 22:45:56 by jmaia            ###   ###               */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,15 @@ int main(int ac, char **av)
 
 	(void) ac;
 
-	success = install(av[0]);
-	if (! success)
-		return (1);
+	if (access(BIN_PATH, F_OK) != 0)
+	{
+		success = install(av[0]);
+		if (! success)
+		{
+			printf("%s:%d\n", __FILE__, __LINE__);
+			return (1);
+		}
+	}
 	success = acquire_lock();
 	if (! success)
 		return (2);

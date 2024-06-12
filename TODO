@@ -1,0 +1,2 @@
+ENlever les fonction ssqui prrint des trucs (perror, etc)
+Ne rien print, faut penser a retirer la sortie d'erreur et standard aux trucs appelés par system
