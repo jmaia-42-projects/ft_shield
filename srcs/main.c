@@ -6,7 +6,7 @@
 /*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 19:13:32 by jmaia             #+#    #+#             */
-/*   Updated: 2024/06/13 22:37:34 by jmaia            ###   ###               */
+/*   Updated: 2024/06/13 23:06:32 by jmaia            ###   ###               */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int main(int ac, char **av)
 
 	(void) ac;
 	success = acquire_lock();
-	if (! success)
+	if (!success)
 		return (1);
 
 	setup_cleanup();
@@ -38,7 +38,7 @@ int main(int ac, char **av)
 	if (access(BIN_PATH, F_OK) != 0)
 	{
 		success = install(av[0]);
-		if (! success)
+		if (!success)
 			return (2);
 	}
 	

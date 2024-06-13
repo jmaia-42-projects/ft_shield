@@ -6,7 +6,7 @@
 /*   By: jmaia <jmaia@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 19:39:32 by jmaia             #+#    #+#             */
-/*   Updated: 2024/03/06 20:03:48 by jmaia            ###   ###               */
+/*   Updated: 2024/06/13 23:06:37 by jmaia            ###   ###               */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ bool daemonize()
 	pid_t sid;
 
 	success = lose_process_group_lead();
-	if (! success)
+	if (!success)
 		return false;
 
 	sid = setsid();
@@ -31,7 +31,7 @@ bool daemonize()
 		return false;
 
 	success = lose_process_group_lead();
-	if (! success)
+	if (!success)
 		return false;
 
 	return true;
