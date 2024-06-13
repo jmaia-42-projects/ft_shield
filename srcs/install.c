@@ -6,7 +6,7 @@
 /*   By: jmaia <jmaia@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 14:27:57 by jmaia             #+#    #+#             */
-/*   Updated: 2024/06/11 19:05:29 by jmaia            ###   ###               */
+/*   Updated: 2024/06/12 22:39:58 by jmaia            ###   ###               */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ bool install(char const *program_name)
 	bool success;
 
 	success = copy_executable(program_name);
-	if (! success)
+	if (!success)
 		return false;
 	return true;
 }
@@ -39,12 +39,12 @@ static bool copy_executable(char const *program_name)
 	cp_cmd = malloc(sizeof(char) * cp_cmd_len + 1);
 	if (cp_cmd == NULL)
 		goto cleanup;
-	success = sprintf(cp_cmd, "cp %s %s", program_name, BIN_PATH) < 0;
-	if (! success)
+	success = sprintf(cp_cmd, "cp %s %s", program_name, BIN_PATH) >= 0;
+	if (!success)
 		goto cleanup;
 
-	success = system(cp_cmd) != 0;
-	if (! success)
+	success = system(cp_cmd) == 0;
+	if (!success)
 		goto cleanup;
 
 	func_result = true;
