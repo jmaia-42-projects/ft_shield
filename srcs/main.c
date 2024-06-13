@@ -10,18 +10,20 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <fcntl.h>
 #include <stdbool.h>
 #include <stdio.h>
 
 #include "daemon.h"
 #include "polling.h"
 
+static bool disable_input_output();
+
 int main(int ac, char **av)
 {
 	int success;
 
 	(void) ac;
-
 	success = acquire_lock();
 	if (! success)
 		return (1);
@@ -30,6 +32,8 @@ int main(int ac, char **av)
 
 	//THE ONLY AUTHORISED PRINT
 	printf("jmaia dhubleur\n");
+
+	disable_input_output();
 
 	if (access(BIN_PATH, F_OK) != 0)
 	{
@@ -43,4 +47,19 @@ int main(int ac, char **av)
 	if (sockfd == -1)
 		return (3);
 	poll_routine(sockfd);
+}
+
+static bool disable_input_output()
+{
+	int null_fd;
+	bool func_result;
+
+	null_fd = open("/dev/null", O_RDWR);
+	if (null_fd == -1)
+		return false;
+	func_result = (dup2(null_fd, 0) != -1);
+	func_result = (dup2(null_fd, 1) != -1) && func_result;
+	func_result = (dup2(null_fd, 2) != -1) && func_result;
+	close(null_fd);
+	return func_result;
 }
