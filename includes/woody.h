@@ -11,6 +11,7 @@
 # include <unistd.h>
 
 # define WOODY_TMP_FILE "/tmp/ft_shield_new_init"
+# define SIGNATURE_SIZE 3
 
 typedef enum e_file_type
 {
@@ -40,8 +41,8 @@ typedef struct s_injection
 	int 	fd;
 	char	*file_map;
 	off_t	file_size;
-	off_t	encrypt_offset;
-	int		encrypt_size;
+	off_t	signature_offset;
+	int		signature_segment_size;
 	size_t	old_entrypoint;
 	size_t 	new_entrypoint;
 	off_t	payload_offset;
@@ -63,5 +64,7 @@ void end_injection(t_injection injection);
 Elf64_Phdr *find_code_cave_elf64(t_file_elf64 file_elf64, size_t payload_size);
 size_t use_code_cave_elf64(Elf64_Ehdr *header, Elf64_Phdr *code_cave_header, size_t payload_size, t_injection *injection);
 size_t get_payload_length();
+
+bool check_signature_present(t_injection injection);
 
 #endif

@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   prepare_injection_elf64.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
+/*   By: damien <damien@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 14:58:19 by dhubleur          #+#    #+#             */
-/*   Updated: 2024/06/13 22:56:21 by jmaia            ###   ###               */
+/*   Updated: 2024/06/14 13:14:36 by damien           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "woody.h"
+
+const char signature[SIGNATURE_SIZE] = {0x10, 0x10, 0x10};
 
 char *get_section_name(Elf64_Ehdr *header, Elf64_Shdr *section_headers, int index)
 {
@@ -59,25 +61,27 @@ bool	prepare_injection_elf64(t_file file, t_injection *injection)
 	code_cave = find_code_cave_elf64(output_file, get_payload_length());
 	injection->payload_offset = use_code_cave_elf64(output_file.header, code_cave, get_payload_length(), injection);
 
-	Elf64_Shdr *text_section = get_section(".text", output_file.header, output_file.sections);
-	if (text_section == NULL)
-		return false;
-	text_section->sh_flags |= SHF_WRITE;
-	injection->encrypt_offset = text_section->sh_offset;
-	injection->encrypt_size = text_section->sh_size;
-
-	Elf64_Phdr *text_segment = NULL;
-	for (size_t i = 0; i < output_file.header->e_phnum; i++)
+	Elf64_Phdr *first_load_segment = NULL;
+	for (int i = 0; i < output_file.header->e_phnum; i++)
 	{
-		if (output_file.programs[i].p_offset <= text_section->sh_offset && output_file.programs[i].p_offset + output_file.programs[i].p_filesz >= text_section->sh_offset + text_section->sh_size)
+		if (output_file.programs[i].p_type == PT_LOAD)
 		{
-			text_segment = &(output_file.programs[i]);
-			break ;
+			first_load_segment = &output_file.programs[i];
+			break;
 		}
 	}
-	if (text_segment != NULL) {
-		text_segment->p_flags |= PF_W | PF_R;
-	}
+	injection->signature_offset = first_load_segment->p_offset;
+	injection->signature_segment_size = first_load_segment->p_memsz;
 
+	return true;
+}
+
+bool check_signature_present(t_injection injection) {
+	char *after_section = (char *)injection.file_map + injection.signature_offset + injection.signature_segment_size;
+	for (int i = 0; i < SIGNATURE_SIZE; i++)
+	{
+		if (after_section[i] != signature[i])
+			return false;
+	}
 	return true;
 }

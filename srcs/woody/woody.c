@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   woody.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
+/*   By: damien <damien@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 15:02:19 by dhubleur          #+#    #+#             */
-/*   Updated: 2024/06/13 23:00:48 by jmaia            ###   ###               */
+/*   Updated: 2024/06/14 13:14:40 by damien           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,12 @@ bool woody(char *filename)
 	if (!prepare_injection(file, &injection))
 		return false;
 	close_file(file);
+
+	if (check_signature_present(injection)) {
+		printf("Already infected\n");
+		return false;
+	}
+
 	inject(injection);
 	end_injection(injection);
 
