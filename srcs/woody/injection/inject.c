@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   inject.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: damien <damien@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 13:07:13 by dhubleur          #+#    #+#             */
-/*   Updated: 2024/06/14 13:16:20 by damien           ###   ########.fr       */
+/*   Updated: 2024/06/14 20:04:37 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,14 @@ size_t get_payload_length()
 	return (PAYLOAD_LENGTH);
 }
 
+void inject_int32(char *ptr, int32_t value)
+{
+	for (int i = 0; i < 4; i++) {
+		uint8_t byte = value >> 8 * i;
+		ptr[i] = byte;
+	}
+}
+
 void inject(t_injection injection)
 {
 	int32_t jmp_adr = (int32_t)(injection.old_entrypoint - (injection.new_entrypoint + PAYLOAD_CODE_LENGTH));
@@ -42,5 +50,32 @@ void inject(t_injection injection)
 	for (int i = 0; i < SIGNATURE_SIZE; i++) {
 		after_section[i] = signature[i];
 	}
+	inject_int32(after_section + 3, injection.old_entrypoint);
+	inject_int32(after_section + 7, injection.payload_offset);
+	inject_int32(after_section + 11, PAYLOAD_LENGTH);
 	printf("Signatured at %p\n", after_section);
+}
+
+int32_t get_int32(char *ptr)
+{
+	int32_t res = 0;
+
+	for (int i = 3; i > 0; i++) {
+		res += (uint8_t) ptr[i];
+		res <<= 8;
+	}
+
+	return res;
+}
+
+void uninject(t_injection injection)
+{
+	char *after_section = (char *)injection.file_map + injection.signature_offset + injection.signature_segment_size;
+	int32_t old_entrypoint = get_int32(after_section + 3);
+	int32_t payload_offset = get_int32(after_section + 7);
+	int32_t payload_length = get_int32(after_section + 11);
+
+	bzero(after_section, 15);
+	bzero(injection.file_map + payload_offset, payload_length);
+	injection.header->e_entry = old_entrypoint;
 }

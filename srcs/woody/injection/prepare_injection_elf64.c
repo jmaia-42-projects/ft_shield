@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prepare_injection_elf64.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: damien <damien@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 14:58:19 by dhubleur          #+#    #+#             */
-/*   Updated: 2024/06/14 13:14:36 by damien           ###   ########.fr       */
+/*   Updated: 2024/06/14 20:15:34 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ bool	prepare_injection_elf64(t_file file, t_injection *injection)
 	memcpy(injection->file_map, file.map, file.size);
 	t_file_elf64 output_file;
 	output_file.header = (Elf64_Ehdr *)injection->file_map;
+	injection->header = (Elf64_Ehdr *)injection->file_map;
 	output_file.sections = (Elf64_Shdr *)(injection->file_map + output_file.header->e_shoff);
 	output_file.programs = (Elf64_Phdr *)(injection->file_map + output_file.header->e_phoff);
 
@@ -83,5 +84,39 @@ bool check_signature_present(t_injection injection) {
 		if (after_section[i] != signature[i])
 			return false;
 	}
+	return true;
+}
+
+bool	prepare_uninjection_elf64(t_file file, t_injection *injection)
+{
+	injection->fd = open(WOODY_TMP_FILE, O_CREAT | O_RDWR | O_TRUNC, 0755);
+	if (injection->fd == -1)
+		return false;
+	injection->file_size = file.size;
+	if (lseek(injection->fd, injection->file_size-1, SEEK_SET) == -1)
+		return false;
+	write(injection->fd, "", 1);
+	injection->file_map = mmap(NULL, injection->file_size,  PROT_WRITE, MAP_SHARED, injection->fd, 0);
+	if (injection->file_map == MAP_FAILED)
+		return false;
+	memcpy(injection->file_map, file.map, file.size);
+	t_file_elf64 output_file;
+	output_file.header = (Elf64_Ehdr *)injection->file_map;
+	injection->header = (Elf64_Ehdr *)injection->file_map;
+	output_file.sections = (Elf64_Shdr *)(injection->file_map + output_file.header->e_shoff);
+	output_file.programs = (Elf64_Phdr *)(injection->file_map + output_file.header->e_phoff);
+
+	Elf64_Phdr *first_load_segment = NULL;
+	for (int i = 0; i < output_file.header->e_phnum; i++)
+	{
+		if (output_file.programs[i].p_type == PT_LOAD)
+		{
+			first_load_segment = &output_file.programs[i];
+			break;
+		}
+	}
+	injection->signature_offset = first_load_segment->p_offset;
+	injection->signature_segment_size = first_load_segment->p_memsz;
+
 	return true;
 }

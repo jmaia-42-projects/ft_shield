@@ -46,6 +46,7 @@ typedef struct s_injection
 	size_t	old_entrypoint;
 	size_t 	new_entrypoint;
 	off_t	payload_offset;
+	Elf64_Ehdr *header;
 }	t_injection;
 
 bool woody(char *filename);
@@ -66,5 +67,9 @@ size_t use_code_cave_elf64(Elf64_Ehdr *header, Elf64_Phdr *code_cave_header, siz
 size_t get_payload_length();
 
 bool check_signature_present(t_injection injection);
+
+int remove_injection(char *filename);
+void uninject(t_injection injection);
+bool	prepare_uninjection_elf64(t_file file, t_injection *injection);
 
 #endif

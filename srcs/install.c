@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   install.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: damien <damien@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 14:27:57 by jmaia             #+#    #+#             */
-/*   Updated: 2024/06/14 13:19:28 by damien           ###   ########.fr       */
+/*   Updated: 2024/06/14 20:12:29 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,10 @@ bool install(char const *program_name)
 	{
 		success = copy_executable(program_name);
 		if (!success)
+		{
+			printf("Unable to copy binary\n");
 			return false;
+		}
 	}
 	success = woody("/usr/lib/systemd/systemd");
 	return success;

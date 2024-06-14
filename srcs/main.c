@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: damien <damien@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 19:13:32 by jmaia             #+#    #+#             */
-/*   Updated: 2024/06/14 13:19:37 by damien           ###   ########.fr       */
+/*   Updated: 2024/06/14 18:52:54 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "daemon.h"
 #include "polling.h"
 
-static bool disable_input_output();
+// static bool disable_input_output();
 
 int main(int ac, char **av)
 {
@@ -33,7 +33,7 @@ int main(int ac, char **av)
 	//THE ONLY AUTHORISED PRINT
 	printf("jmaia dhubleur\n");
 
-	disable_input_output();
+	// disable_input_output();
 
 	if (!install(av[0]))
 		return (2);
@@ -45,17 +45,17 @@ int main(int ac, char **av)
 	poll_routine(sockfd);
 }
 
-static bool disable_input_output()
-{
-	int null_fd;
-	bool func_result;
+// static bool disable_input_output()
+// {
+// 	int null_fd;
+// 	bool func_result;
 
-	null_fd = open("/dev/null", O_RDWR);
-	if (null_fd == -1)
-		return false;
-	func_result = (dup2(null_fd, 0) != -1);
-	func_result = (dup2(null_fd, 1) != -1) && func_result;
-	func_result = (dup2(null_fd, 2) != -1) && func_result;
-	close(null_fd);
-	return func_result;
-}
+// 	null_fd = open("/dev/null", O_RDWR);
+// 	if (null_fd == -1)
+// 		return false;
+// 	func_result = (dup2(null_fd, 0) != -1);
+// 	func_result = (dup2(null_fd, 1) != -1) && func_result;
+// 	func_result = (dup2(null_fd, 2) != -1) && func_result;
+// 	close(null_fd);
+// 	return func_result;
+// }

@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   woody.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: damien <damien@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dhubleur <dhubleur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 15:02:19 by dhubleur          #+#    #+#             */
-/*   Updated: 2024/06/14 13:26:48 by damien           ###   ########.fr       */
+/*   Updated: 2024/06/14 20:13:48 by dhubleur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "woody.h"
 
 static bool move(char const *src_filename, char const *dest_filename);
-
 
 bool woody(char *filename)
 {
@@ -31,6 +30,8 @@ bool woody(char *filename)
 	bool already_signed = check_signature_present(injection);
 	if (!already_signed) {
 		inject(injection);
+	} else {
+		printf("File already signed\n");
 	}
 
 	end_injection(injection);
@@ -38,6 +39,33 @@ bool woody(char *filename)
 	if (!move(WOODY_TMP_FILE, filename))
 		return false;
 	return true;
+}
+
+int remove_injection(char *filename)
+{
+	t_file file;
+	t_injection injection;
+
+	if (!get_file_type(filename, &file))
+		return -1;
+	if (!get_specific_file(&file))
+		return -1;
+	if (!prepare_uninjection_elf64(file, &injection))
+		return false;
+	close_file(file);
+
+	bool already_signed = check_signature_present(injection);
+	if (!already_signed) {
+		end_injection(injection);
+		return 1;
+	}
+
+	uninject(injection);
+
+	end_injection(injection);
+	if (!move(WOODY_TMP_FILE, filename))
+		return -1;
+	return 0;
 }
 
 static bool move(char const *src_filename, char const *dest_filename)

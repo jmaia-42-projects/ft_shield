@@ -65,6 +65,14 @@ void accept_client(int serverSocket)
 	send_to_client(&new_client, "Password: ");
 }
 
+void disconnect_all()
+{
+	for (size_t i = 0; i < MAX_CLIENTS; i++)
+	{
+		disconnect(&clients[i]);
+	}
+}
+
 void disconnect(t_client *client)
 {
 	close(client->socket);
