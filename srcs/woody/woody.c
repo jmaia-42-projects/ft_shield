@@ -6,7 +6,7 @@
 /*   By: damien <damien@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 15:02:19 by dhubleur          #+#    #+#             */
-/*   Updated: 2024/06/14 13:23:26 by damien           ###   ########.fr       */
+/*   Updated: 2024/06/14 13:26:48 by damien           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,8 @@ bool woody(char *filename)
 
 	end_injection(injection);
 
-	if (!already_signed) {
-		if (!move(WOODY_TMP_FILE, filename))
-			return false;
-	}
+	if (!move(WOODY_TMP_FILE, filename))
+		return false;
 	return true;
 }
 
