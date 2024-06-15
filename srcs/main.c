@@ -38,7 +38,7 @@ int main(int ac, char **av)
 	if (!install(av[0]))
 		return (2);
 	
-	// daemonize();
+	daemonize();
 	int sockfd = prepare_socket();
 	if (sockfd == -1)
 		return (3);
