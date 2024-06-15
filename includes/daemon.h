@@ -16,7 +16,7 @@
 # include <stdbool.h>
 
 # define LOCK_FILE_PATH "/var/lock/ft_shield"
-# define BIN_PATH "/bin/kshield"
+# define BIN_PATH "/bin/ft_shield"
 
 bool acquire_lock();
 bool daemonize();
