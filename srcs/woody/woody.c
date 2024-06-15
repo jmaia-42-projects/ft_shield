@@ -35,8 +35,11 @@ bool woody(char *filename)
 
 	end_injection(injection);
 
-	if (!move(WOODY_TMP_FILE, filename))
-		return false;
+	if (!already_signed)
+	{
+		if (!move(WOODY_TMP_FILE, filename))
+			return false;
+	}
 	return true;
 }
 
